@@ -1,0 +1,13 @@
+@import '../css/variables';
+
+.left-panel {
+
+  max-width: 250px;
+  background: $white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex-grow: 1;
+  padding: 20px;
+  
+}

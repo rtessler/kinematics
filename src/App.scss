@@ -1,12 +1,13 @@
-.App {
+.app {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
+.app {
+  min-height: 100vh;
+  display: flex;
 }
 
-.App-header {
+.app-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -17,6 +18,12 @@
   color: white;
 }
 
-.App-link {
-  color: #09d3ac;
+.my-button {
+  border: 1px solid blue;
+  background: white;
+}
+
+img.pokemon-image {
+  margin-top: 20px;
+  margin-bottom: 10px;
 }

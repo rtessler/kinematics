@@ -1,0 +1,26 @@
+@import '../css/variables';
+
+.field {
+
+  .error-msg { color: $red; }
+
+  margin: 10px 0px;
+
+  .text-field {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  
+    input {
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid $grey;
+    
+      &.uppercase {
+        input {
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}
