@@ -5,11 +5,6 @@ import './rightPanel.scss'
 
 export default class RightPanel extends Component {
 
-  constructor(props) {
-
-    super(props)
-  }
-
   componentDidMount() {
     
     window.addEventListener('resize', this.resize)
@@ -17,24 +12,20 @@ export default class RightPanel extends Component {
 
   resize = () => { 
 
-    // console.log('resize')
-
-    // this.createCanvas()  
+    console.log('resize')
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.resize)
   }
 
-  componentDidUpdate(prevProps) {
-
-  }
-
   render() {
+
+    const { numberOfPoints, circleSizes } = this.props
 
     return <div className='right-panel'>
 
-              <CanvasAnimation /> 
+              <CanvasAnimation numberOfPoints={numberOfPoints} circleSizes={circleSizes} /> 
 
           </div>
   }

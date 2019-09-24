@@ -11,7 +11,13 @@ interface LeftPanelData {
   onGenerate: any
 }
 
-export default class LeftPanel extends Component<LeftPanelData, any> {
+interface LeftPanelState {
+
+  numberOfPoints: number,
+  circleSizes: number,
+}
+
+export default class LeftPanel extends Component<LeftPanelData, LeftPanelState> {
 
   constructor(props: LeftPanelData) {
 
@@ -45,7 +51,7 @@ export default class LeftPanel extends Component<LeftPanelData, any> {
 
     // put some limits
 
-    let nextState:any = {...this.state}
+    let data:any = {...this.state}
 
     switch (id) {
       case 'numberOfPoints':
@@ -57,15 +63,20 @@ export default class LeftPanel extends Component<LeftPanelData, any> {
 
       case 'circleSizes':
 
-        // if (val > data.numberOfPoints)
-        //   val = data.numberOfPoints
+        if (val > 20)
+          val = 20
 
         break
     }
 
-    nextState[id] = val
+    val = parseInt(val)
 
-    this.setState({nextState})
+    if (isNaN(val))
+      val = 0
+
+    data[id] = val
+
+    this.setState(data)
   }
 
   go() {
@@ -76,7 +87,7 @@ export default class LeftPanel extends Component<LeftPanelData, any> {
 
   render() {
 
-    const { numberOfPoints, circleSizes } = this.props
+    const { numberOfPoints, circleSizes } = this.state
    
     return (
 

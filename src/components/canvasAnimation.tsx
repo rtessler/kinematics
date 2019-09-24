@@ -4,6 +4,11 @@ import { getBrowserName } from './utils'
 
 import './canvasAnimation.scss'
 
+interface CanvasAnimationProps {
+  numberOfPoints: number,
+  circleSizes: number
+}
+
 
 enum AnimType { EXPLODE = 1, BOUNCE = 2, FUNNEL = 3};
 
@@ -42,7 +47,7 @@ interface CanvasAnimationData {
   points: Circle[]
 }
 
-export default class CanvasAnimation extends Component {
+export default class CanvasAnimation extends Component<CanvasAnimationProps> {
 
   browser: string
   data: CanvasAnimationData
@@ -53,21 +58,9 @@ export default class CanvasAnimation extends Component {
 
     super(props)
 
+    console.log('CanvasAnimation props = ', props)
     this.geom = new Geometry()
 
-    this.data = {
-
-      animType: AnimType.EXPLODE,
-      frameCount: 0,
-      frameRate: 25,
-      animDuration: 1,
-      totalFrames: 0,
-    
-      pointNo: 120,
-      t: [],
-      points: []
-    }
-  
     this.easingFunctions = {
       // no easing, no acceleration
       linear: function (t: number) { return t },
@@ -99,6 +92,11 @@ export default class CanvasAnimation extends Component {
   }
 
   componentDidMount() {
+
+    this.init()
+  }
+
+  componentDidUpdate() {
 
     this.init()
   }
@@ -284,6 +282,11 @@ export default class CanvasAnimation extends Component {
   
     createCanvas()
     {
+      var element = document.getElementById("canvas");
+      
+      if (element) 
+        element.parentNode.removeChild(element);
+
       // cant sepecify canvas width and height in css, have to do it in canvas html
   
       var e = document.getElementsByClassName("canvas-container")[0] as HTMLElement;
@@ -506,7 +509,7 @@ export default class CanvasAnimation extends Component {
       this.data.animDuration = 1
       this.data.totalFrames = this.data.frameRate * this.data.animDuration
 
-      var circle_radius_no = 4  // number of different sizes
+      var circle_radius_no = this.props.circleSizes  // number of different sizes
 
       this.data.points = []
   
@@ -540,7 +543,19 @@ export default class CanvasAnimation extends Component {
   
   init()
   {
+    this.data = {
 
+      animType: AnimType.EXPLODE,
+      frameCount: 0,
+      frameRate: 25,
+      animDuration: 1,
+      totalFrames: 0,
+    
+      pointNo: this.props.numberOfPoints,
+      t: [],
+      points: []
+    }
+  
     this.browser = getBrowserName()
 
     this.createCanvas()

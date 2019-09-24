@@ -24,6 +24,7 @@ export class PokemonSearch extends Component<User, SearchState> {
         error: false,
         pokemon: null
       }
+      
       this.pokemonRef = React.createRef();
   }
 

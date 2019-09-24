@@ -18,16 +18,18 @@ class App extends Component<any,any> {
     this.state = { numberOfPoints: 120, circleSizes: 4} 
   }
 
-  onGenerate(newData: any) {
+  onGenerate(data: any) {
 
-    console.log('onGenerate ', newData)
+    console.log('onGenerate: data: ', data)
 
-    this.setState({...newData})
+    this.setState({...data})
   }
 
   render() {
 
     const {numberOfPoints, circleSizes} = this.state
+
+    console.log('render numberOfPoints: ', numberOfPoints)
 
     return (
       <div className="app">
