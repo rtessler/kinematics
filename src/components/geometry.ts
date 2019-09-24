@@ -6,43 +6,44 @@ export class Circle {
     original_x: number;
     original_y: number;			
 
-    dx?: number;
-    dy?: number;
+    direction: Vector;
 }
 
 export class Vector {
+
   x: number;
   y: number;
-}
 
-export default class Geometry {
-
-  pointInside(o: Circle, x: number, y: number) {
-  
-    return (x >= o.x - o.radius && x <= o.x + o.radius && y >= o.y - o.radius && y <= o.y + o.radius);
+  constructor(x: number, y: number) {
+    this.x = x
+    this.y = y
   }
 
-  dotproduct(v1: Vector, v2: Vector) {
+  copy() : Vector {
+    return new Vector(this.x, this.y)
+  }
+
+  dotproduct(v1: Vector, v2: Vector) : number {
   
     return v1.x*v2.x + v1.y*v2.y;
   }
 
-  crossProduct(v1: Vector, v2: Vector)
+  crossProduct(v1: Vector, v2: Vector) : Vector
   { 
-    return {x: v1.x * v2.x, y: v1.y * v2.y};
+    return new Vector(v1.x * v2.x, v1.y * v2.y)
   }
 
   scale(v: Vector, s: number) : Vector {
 
-    return {x: v.x * s, y: v.y * s}
+    return new Vector(v.x * s,v.y * s)
   }
 
   subtract(a: Vector, b: Vector) : Vector {
 
-    return {x: a.x -b.x, y: a.y - b.y}
+    return new Vector(a.x -b.x, a.y - b.y)
   }
 
-  reflected(normal: Vector, v: Vector) : Vector {
+  reflected(normal: Vector) : Vector {
 
     // get the reflected vector
 
@@ -50,22 +51,33 @@ export default class Geometry {
 
     // assume normal and v are unit vectors
 
-    return this.subtract( this.scale(normal, 2 * this.dotproduct(normal, v)), v)
+    return this.subtract( this.scale(normal, 2 * this.dotproduct(normal, this)), this)
   }
 
-  magnitude(v: Vector)
+  magnitude() : number
   {
-    return Math.sqrt(v.x*v.x + v.y*v.y);
+    return Math.sqrt(this.x*this.x + this.y*this.y);
   }
 
-  normalize(v: Vector) : Vector
+  normalize()
   {
-    var len = this.magnitude(v);
+    let len = this.magnitude();
 
-    return {x: v.x/len, y: v.y/len};
+    return new Vector(this.x/len, this.y/len)
   }
 
-  reverse(v: Vector) : Vector {
-    return {x: -v.x, y: -v.y}
+  reverse() {
+    this.x = -this.x
+    this.y = -this.y
+  }
+}
+
+export default class Geometry {
+
+  pointInside(o: Circle, x: number, y: number) {
+
+    // actually this is point inside square
+  
+    return (x >= o.x - o.radius && x <= o.x + o.radius && y >= o.y - o.radius && y <= o.y + o.radius);
   }
 }

@@ -9,34 +9,32 @@ import './App.scss';
 
 //const App: React.FC = () => {
 
-class App extends Component {
+class App extends Component<any,any> {
 
-  onGenerate() {
+  constructor(props: any) {
 
-    // console.log('onGenerate ', newData)
+    super(props)
 
-    // // make a new copy
+    this.state = { numberOfPoints: 120, circleSizes: 4} 
+  }
 
-    // const { data } = this.state
+  onGenerate(newData: any) {
 
-    // //if (data.numberOfPoints !== newData.numberOfPoints || data.maxLinksPerPoint !== newData.maxLinksPerPoint) {
+    console.log('onGenerate ', newData)
 
-    //   // something changed
-
-    //   this.setState({data: {...newData}})
-    // //}
+    this.setState({...newData})
   }
 
   render() {
 
-    const data = {}
+    const {numberOfPoints, circleSizes} = this.state
 
     return (
       <div className="app">
         {/* <PokemonSearch name="John Doe" numberOfPokemons={5} /> */}
 
-        <LeftPanel onGenerate={this.onGenerate.bind(this)} />
-        <RightPanel /> 
+        <LeftPanel numberOfPoints={numberOfPoints} circleSizes={circleSizes} onGenerate={this.onGenerate.bind(this)} />
+        <RightPanel numberOfPoints={numberOfPoints} circleSizes={circleSizes} /> 
 
       </div>
     );

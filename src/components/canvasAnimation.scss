@@ -1,7 +1,14 @@
 @import '../css/variables';
 
 .canvas-container {
-  margin: 7px;
-  border: 1px solid $grey;
-  box-sizing: border-box;
+  
+  width: 100%;
+  //height: 100%;
+
+  #canvas {
+    border: 1px solid $grey;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+  }
 }

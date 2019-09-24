@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import Geometry, {Circle, Vector} from './geometry'
 import { getBrowserName } from './utils'
 
+import './canvasAnimation.scss'
+
+
 enum AnimType { EXPLODE = 1, BOUNCE = 2, FUNNEL = 3};
 
 // function requestAnimFrame() {
@@ -56,9 +59,9 @@ export default class CanvasAnimation extends Component {
 
       animType: AnimType.EXPLODE,
       frameCount: 0,
-      frameRate: 60,
+      frameRate: 25,
       animDuration: 1,
-      totalFrames: 60,
+      totalFrames: 0,
     
       pointNo: 120,
       t: [],
@@ -123,21 +126,21 @@ export default class CanvasAnimation extends Component {
     var center_y = canvas.height/2
 
     context.beginPath();
-    context.arc(o.x + center_x, o.y + center_y, o.radius, 0, 2 * Math.PI, false);
-    //context.fillStyle = "rgba(0, 255, 0, 0.3)";
-    context.fillStyle = "rgba(191, 217, 86, 0.3)";
-    context.fill();
+    context.arc(o.x + center_x, o.y + center_y, o.radius, 0, 2 * Math.PI, false)
+    //context.fillStyle = "rgba(0, 255, 0, 0.3)"
+    context.fillStyle = "rgba(191, 217, 86, 0.3)"
+    context.fill()
   }
   
   draw()
   {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height)
 
     for (var i = 0, len = this.data.points.length; i < len; i++)
-      this.drawCircle(this.data.points[i]);		
+      this.drawCircle(this.data.points[i])
   }
 
   move()
@@ -145,20 +148,25 @@ export default class CanvasAnimation extends Component {
     //var t = this.frame_count / this.total_frames;
 
     const canvas = document.getElementById('canvas') as HTMLCanvasElement
+    const w = canvas.width
+    const h = canvas.height
+    const w2 = canvas.width / 2
+    const h2 = canvas.height / 2
+    const maxRadius = 50
+    
 
     switch (this.data.animType)
     {
       case AnimType.EXPLODE:
 
-        const t = this.data.t[this.data.frameCount];
+        const i = this.data.frameCount < this.data.t.length ? this.data.frameCount : this.data.t.length-1
+
+        const t = this.data.t[i]
     
         this.data.points.forEach((v,i) => {
 
-          const x = t * v.original_x * canvas.width
-          const y = t * v.original_y * canvas.height
-
-          v.dx = (x - v.x)*8
-          v.dy = (y - v.y)*8
+          const x = t * v.original_x * (w - 80)
+          const y = t * v.original_y * (h - 80)
 
           v.x = x
           v.y = y	
@@ -168,62 +176,52 @@ export default class CanvasAnimation extends Component {
 
       case AnimType.BOUNCE:
 
-        for (let i = 0, len = this.data.points.length; i < len; i++) {
-        //this.data.points.forEach((v,i) => {
-        
-          let v = this.data.points[i];
+        const normRight = new Vector(-1,0)
+        const normLeft = new Vector(1, 0)
+        const normBottom = new Vector(0, -1)
+        const normTop = new Vector(0,1)
 
-          if (v.x + v.radius > canvas.width / 2 || v.x - v.radius < -canvas.width / 2)
-            v.dx *= -1
+        this.data.points.forEach((v,i) => {
 
-          if (v.y + v.radius > canvas.height / 2 || v.y - v.radius < -canvas.height / 2)
-            v.dy *= -1
+          // if (v.x + v.radius > w / 2 || v.x - v.radius < -w / 2)
+          //   v.dx *= -1
 
-          // let v2: Vector
-          // let incident = this.geom.reverse(this.geom.normalize({x: v.dx, y: v.dy}))
+          // if (v.y + v.radius > h / 2 || v.y - v.radius < -h / 2)
+          //   v.dy *= -1
 
-          // if (v.x + v.radius > canvas.width / 2) 
-          //   v2 = this.geom.reflected({x: -1, y: 0}, incident)
+          if (v.x + v.radius > w2 || v.x - v.radius < -w2)
+            v.direction.x *= -1
 
-          // if (v.x - v.radius < -canvas.width / 2)
-          //   v2 = this.geom.reflected({x: 1, y: 0}, incident)
+          if (v.y + v.radius > h2 || v.y - v.radius < -h2)
+            v.direction.y *= -1
 
-          // if (v.y + v.radius > canvas.height / 2 )
-          //   v2 = this.geom.reflected({x: 0, y: -1}, incident)
+          // let incident = v.direction.copy()
+          // incident.reverse()
 
-          // if (v.y - v.radius < -canvas.height / 2)
-          //   v2 = this.geom.reflected({x: 0, y: 1}, incident)
+          // // off right
 
-/*
+          // if (v.x + v.radius > w2) 
+          //   v.direction = incident.reflected(normRight)
 
-          var n;
+          // // off left
 
-          if (v.x + v.radius > canvas.width / 2)					
-            n = {x:-1, y:0};					
-          else if (v.x - v.radius < -canvas.width / 2)					
-            n = {x:1, y:0};					
-          else if (v.y + v.radius > canvas.height / 2)					
-            n = {x:0, y: -1};					
-          else if (v.y - v.radius < -canvas.height / 2)					
-            n = {x: 0, y: 1};					
+          // if (v.x - v.radius < -w2)
+          //   v.direction = incident.reflected(normLeft)
 
-          var q = {x: dx, y: dy};
+          // // off bottom
 
-          q = this.normalize(q);
+          // if (v.y + v.radius > h2 )
+          //   v.direction = incident.reflected(normBottom)
 
-          var dp = 2 * this.dotproduct(n, q);
+          // // off top
 
-          //R = 2N(N*L)-L
+          // if (v.y - v.radius < -h2)
+          //   v.direction = incident.reflected(normTop)
 
-          //v2 = dp * n - v
+          v.x += v.direction.x;
+          v.y += v.direction.y;
 
-          v.dx = dp * n.x - v.dx;
-          v.dy = dp * n.y - v.dy;
-*/
-
-          v.x += v.dx;
-          v.y += v.dy;
-        }
+        })
 
         break;
 
@@ -233,8 +231,11 @@ export default class CanvasAnimation extends Component {
         {
           var v = this.data.points[i];
 
-          v.x += v.dx;
-          v.y += v.dy;
+          v.x += v.direction.x;
+          v.y += v.direction.y;
+
+          // v.x += v.dx;
+          // v.y += v.dy;
         }
         break;
     }
@@ -246,7 +247,7 @@ export default class CanvasAnimation extends Component {
     {
       case AnimType.EXPLODE:
 
-        if (this.data.frameCount > this.data.totalFrames)
+        if (this.data.frameCount >= this.data.totalFrames)
         {
           this.data.animType = AnimType.BOUNCE;
         }
@@ -292,8 +293,8 @@ export default class CanvasAnimation extends Component {
   
       var q = document.getElementsByClassName("right-panel")[0] as HTMLElement;
   
-      var w = q.clientWidth;
-      var h = q.clientHeight;
+      var w = e.clientWidth;
+      var h = e.clientHeight - 80;
   
       var x = document.createElement("canvas");
   
@@ -490,10 +491,13 @@ export default class CanvasAnimation extends Component {
   
       for (var i = 0, len = this.data.points.length; i < len; i++)
       {
-        var v =  this.data.points[i];
+        var v =  this.data.points[i]
   
-        v.dx = -v.x / this.data.totalFrames;
-        v.dy = (canvas.height - v.y) / this.data.totalFrames;
+        v.direction.x = -v.x / this.data.totalFrames
+        v.direction.y = (canvas.height - v.y) / this.data.totalFrames
+
+        // v.dx = -v.x / this.data.totalFrames
+        // v.dy = (canvas.height - v.y) / this.data.totalFrames
       }
     }
   
@@ -508,12 +512,14 @@ export default class CanvasAnimation extends Component {
   
       for (let i = 0, len = this.data.pointNo; i < len; i++)
       {
-        var x = Math.random() - 0.5;		// x: -0.5..0.5
-        var y = Math.random() - 0.5;		// y: -0.5..0.5				
+        var x = Math.random() - 0.5		// x: -0.5..0.5
+        var y = Math.random() - 0.5		// y: -0.5..0.5				
   
         // radius: [10,20,30,40,50]
   
-        var r = (Math.floor(Math.random() * circle_radius_no) + 1) * 10;
+        var r = (Math.floor(Math.random() * circle_radius_no) + 1) * 10
+
+        let direction = new Vector(x,y).normalize()
   
         const o = {          
           x: x,
@@ -521,8 +527,7 @@ export default class CanvasAnimation extends Component {
           radius: r,
           original_x: x,
           original_y: y,				
-          //dx: dx,
-          //dy: dy,
+          direction: direction
         }
   
         this.data.points.push(o)
@@ -535,7 +540,6 @@ export default class CanvasAnimation extends Component {
   
   init()
   {
-    console.log('init')
 
     this.browser = getBrowserName()
 
@@ -547,12 +551,12 @@ export default class CanvasAnimation extends Component {
 
     var self = this;
 
-    //setTimeout(() => {
+    setTimeout(() => {
 
       self.animloop()
       //self.startListening()
 
-   // }, 200)
+   }, 200)
   }
 
   render() {

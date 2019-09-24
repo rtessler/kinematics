@@ -72,7 +72,7 @@ export class PokemonSearch extends Component<User, SearchState> {
     else if (pokemon) {
       resultMarkup = <div>
           
-            <img src={pokemon.imageUrl} alt='' className='pokeomon-image' />
+            <img src={pokemon.imageUrl} alt='' className='pokemon-image' />
             <p>{pokemon.name} has {pokemon.numberOfAbilities} abilites and {pokemon.baseExperience} base experience</p>
         </div>
     }

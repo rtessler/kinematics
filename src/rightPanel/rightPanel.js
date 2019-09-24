@@ -34,7 +34,7 @@ export default class RightPanel extends Component {
 
     return <div className='right-panel'>
 
-              <CanvasAnimation />
+              <CanvasAnimation /> 
 
           </div>
   }

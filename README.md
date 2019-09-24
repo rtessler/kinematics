@@ -1,12 +1,8 @@
 ### Netork generator
 
-generate a network of n points
-display it in a browser
-find the 2 most distant point
-use the dijkstra algorithm to find shot path between them
-draw the path
+bouncing ball canvas animation
 
-created with create-react-app
+created with create-react-app --typescript
 
 npm install
 npm start
