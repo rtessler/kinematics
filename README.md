@@ -1,4 +1,4 @@
-### Netork generator
+### Kinematics
 
 bouncing ball canvas animation
 
